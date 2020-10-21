@@ -1,0 +1,255 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage_home.master.cs" Inherits="MasterPage_home" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!--BootStrap-->
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.0.0.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+
+    <script src="Scripts/jquery-3.0.0.min.js"></script>
+    <script src="Scripts/moment.min.js"></script>
+    <script src="Scripts/bootstrap-datetimepicker.min.js"></script>
+    <link href="packages/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="packages/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker-standalone.css" rel="stylesheet" />
+    <link href="packages/glyphicons-only-bootstrap-master/css/bootstrap.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <link href="Content/jQuery-1.12.1-ui.css" rel="stylesheet" />
+    <script src="Scripts/jquery-1.12.1.js"></script>
+    <style type="text/css">
+        /*背景圖*/
+        .topheader {
+            background-image: url("../img/bg_masterpage.jpg");
+        }
+
+        /*/*指定LinkButton文字顏色*/
+        .hya {
+            color: gray;
+            text-align:center;
+        }
+
+            /*指定LinkButton 滑鼠移動過後的效果*/
+            .hya:hover {
+                text-decoration: none;
+                color: black;
+            }
+
+        .navbar-nav li:hover > ul.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+            }
+
+        /* rotate caret on hover */
+        .dropdown-menu > li > a:hover:after {
+            text-decoration: underline;
+            transform: rotate(-90deg);
+        }
+    </style>
+
+
+    <script type='text/javascript'>
+        //系統倒數登出(s)------------------------------------------------------------------------
+        setTimeout('countdown()', 1000); //1秒執行一次秒數的倒數
+        function countdown() {
+            //有登入才開始倒數
+            if (document.getElementById('<%=lb_login_name.ClientID %>').innerText != "") {
+                document.getElementById('ddi_timer').style.display = "";
+                var m = document.getElementById('timer_min');
+                var s = document.getElementById('timer_sec');
+                var name = document.getElementById('<%=lb_login_name.ClientID %>');
+
+                s.innerHTML = s.innerHTML - 1;
+
+                //秒數到 分鐘未到。分換算成秒
+                if (m.innerHTML != 0 && s.innerHTML == 0) {
+                    m.innerHTML = m.innerHTML - 1;
+                    s.innerHTML = 60;
+                }
+
+                if (m.innerHTML == 0 && s.innerHTML == 0) {
+                    name.innerText = "";
+                    window.location = '/login.aspx';
+                }
+                else {
+                    setTimeout('countdown()', 1000);
+                }
+
+            }
+        }
+        //系統倒數登出(e)------------------------------------------------------------------------
+
+        //日期設置(s)----------------------------------------------------------------------------
+        //招募-查詢
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_c_modify_time_1').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_c_modify_time_2').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_i_time_1').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_i_time_2').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_r_time_1').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_r_time_2').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_e_start_date').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_e_end_date').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_e_start_date_1').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_e_start_date_2').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_e_end_date_1').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_e_end_date_2').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_expiry_date').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+        //日期設置(e)----------------------------------------------------------------------------
+
+    </script>
+
+
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div id="topheader">
+            <%-- body --%>
+            <nav class="navbar sticky-top navbar-expand-lg navbar-expand-sm navbar-light bg-light">
+                <a class="navbar-brand" style="font-family: 'Playfair Display'">MHEHR</a>
+
+                <ul class="navbar-nav">
+                    <li class="dropdown" id="li_public" runat="server" visible="False">
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <asp:Label ID="lb_public" runat="server" Text="公佈欄"></asp:Label>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <asp:LinkButton ID="lb_st" Class="dropdown-item hya" runat="server" Visible="False">分機表</asp:LinkButton>
+                            </li>
+                            <li class="dropdown-submenu text-center" style="padding-top:5px; padding-bottom:5px">
+                                <asp:LinkButton ID="lb_store" Class="dropdown-toggle hya" runat="server" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                   特約商店
+                                </asp:LinkButton>
+                                <ul class="dropdown-menu text-center">
+                                    <asp:LinkButton ID="lbtn_store_query" Class="dropdown-item hya" runat="server"  OnClick="lbtn_store_query_Click" >查詢</asp:LinkButton>
+                                    <asp:LinkButton ID="lbtn_store_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_store_edit_Click" Visible="False">編輯</asp:LinkButton>
+                                </ul>
+                            </li>
+                            <li>
+                                <%-- 第二層選項 --%>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown" id="li_ii" runat="server" visible="False">
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <asp:Label ID="lb_ii" runat="server" Text="招募"></asp:Label>
+                        </a>
+                        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+
+                            <asp:LinkButton ID="lbtn_ii_query" Class="dropdown-item hya" runat="server" PostBackUrl="~/interview_query.aspx">查詢</asp:LinkButton>
+                            <asp:LinkButton ID="lbtn_ii_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_interview_edit_Click">編輯</asp:LinkButton>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown" id="li_e" runat="server" visible="False">
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <asp:Label ID="lb_e" runat="server" Text="考核"></asp:Label>
+                        </a>
+                        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+
+                            <asp:LinkButton ID="lbtn_e_query" Class="dropdown-item hya" runat="server" PostBackUrl="~/evaluation_query.aspx">查詢</asp:LinkButton>
+                            <asp:LinkButton ID="lbtn_e_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_e_edit_Click" Visible="False">編輯</asp:LinkButton>
+
+                        </div>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item dropdown dropleft">
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <asp:Label ID="lb_login_name" runat="server" Text="Label"></asp:Label>
+                        </a>
+                        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+                            <asp:LinkButton ID="lbtn_login" Class="dropdown-item hya" runat="server" OnClick="lbtn_login_Click">Login</asp:LinkButton>
+                            <a class="dropdown-item" style="font-size: smaller; display: none;" id="ddi_timer">倒數<span id='timer_min'>19 </span>分<span id='timer_sec'>59 </span>秒登出</a>
+                        </div>
+                    </li>
+                </ul>
+
+            </nav>
+
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+
+        </div>
+    </form>
+</body>
+</html>
