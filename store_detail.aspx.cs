@@ -22,7 +22,7 @@ public partial class store_detail : System.Web.UI.Page
         Conn.Open();
 
         SqlDataReader dr = null;
-        SqlCommand searchclasscmd = new SqlCommand("SELECT Right('000' + Cast(id as varchar),3) as ID, [class] as 屬性,[name] as 店名,[address] as 地址,[phone] as 電話,[expiry_date] as 到期日 FROM[dbo].[hr_store] where [id] = @my_id;", Conn);
+        SqlCommand searchclasscmd = new SqlCommand("SELECT Right('000' + Cast(id as varchar),3) as ID, [class] as 屬性,[name] as 名稱,[address] as 地址,[phone] as 電話,[expiry_date] as 到期日 FROM[dbo].[hr_store] where [id] = @my_id;", Conn);
         searchclasscmd.Parameters.Add("@my_id", SqlDbType.VarChar, 5);
         searchclasscmd.Parameters["@my_id"].Value = Request.QueryString["id"];
 

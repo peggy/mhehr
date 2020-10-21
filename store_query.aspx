@@ -90,6 +90,12 @@
                             <asp:Button ID="btn_class_11" runat="server" Text="幼兒園" Class="btn btn-sm btn-outline-light" Style="color: black" OnClick="btn_class_Click" />
                         </asp:TableCell>
                     </asp:TableRow>
+                    <%-- 201021_Betty：新增「團購」項目。BY PEGGY --%>
+                    <asp:TableRow runat="server">
+                        <asp:TableCell runat="server">
+                            <asp:Button ID="btn_class_12" runat="server" Text="團購活動" Class="btn btn-sm btn-outline-light" Style="color: black" OnClick="btn_class_Click" />
+                        </asp:TableCell>
+                    </asp:TableRow>
                 </asp:Table>
             </div>
             <div class="col-12 col-lg-10 col-xl-10">

@@ -45,6 +45,7 @@
             <div class="col-12 col-lg-2 col-sm-2 text-right">
                 <asp:Label ID="lb_class" runat="server" Text="屬性："></asp:Label>
             </div>
+            <%-- 201021_Betty：新增「團購」項目。BY PEGGY --%>
             <div class="col-12 col-lg-10 col-sm-10 text-left">
                 <asp:DropDownList ID="ddl_class" runat="server" Class="form-control w-25">
                     <asp:ListItem Value="請選擇">請選擇</asp:ListItem>
@@ -58,6 +59,7 @@
                     <asp:ListItem Value="文教">文教</asp:ListItem>
                     <asp:ListItem Value="科技">科技</asp:ListItem>
                     <asp:ListItem Value="幼兒園">幼兒園</asp:ListItem>
+                    <asp:ListItem Value="團購活動">團購活動</asp:ListItem>
                 </asp:DropDownList>
             </div>
         </div>
