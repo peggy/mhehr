@@ -406,6 +406,12 @@ public partial class evaluation_edit : System.Web.UI.Page
             Response.Write("<script language='javascript'>alert('請輸入「綜合表現」項目'); </script>");
             return;
         }
+        else if (rb_ep_pass_1.Checked) //201023：新增因未通過，綜合表現必填。BY PEGGY
+        {
+            Record("提交錯誤-考核未通過需輸入綜合表現。序號：" + tb_e_id.Text);
+            Response.Write("<script language='javascript'>alert('請於「綜合表現」項目輸入未通過之原因'); </script>");
+            return;
+        }
         else
         {
             cmd.Parameters.Add("@my_ep_comprehensive", SqlDbType.VarChar, 200); //綜合表現
@@ -610,6 +616,19 @@ public partial class evaluation_edit : System.Web.UI.Page
         cmd.Cancel();
         Conn.Close();
         //讀取資料表：MHE_Notice_Email，收件者(e)--------------------------------------------------------------------------------
+        string str_ep_pass = null;
+        if (rb_ep_pass_1.Checked)
+        {
+            str_ep_pass = "未通過";
+        }
+        else if (rb_ep_pass_2.Checked)
+        {
+            str_ep_pass = "延長六個月";
+        }
+        else if (rb_ep_pass_3.Checked)
+        {
+            str_ep_pass = "通過";
+        }
         string[] arr_to_mail = to_mail.Split(',');
         Message jmail = new Message();
         jmail.From = "mheit";
@@ -624,7 +643,8 @@ public partial class evaluation_edit : System.Web.UI.Page
             "序號：" + tb_e_id.Text + "\r\n" +
             "課室：" + tb_e_dept.Text + "\r\n" +
             "工號：" + tb_e_empno.Text + "\r\n" +
-            "姓名：" + tb_e_name.Text + "\r\n\r\n" +
+            "姓名：" + tb_e_name.Text + "\r\n" +
+            "考核結果：" + str_ep_pass + "\r\n\r\n" +
             "此為系統自動發出，請勿回信\r\n" +
             "系統連結：http://172.17.1.100:8081";
         jmail.Charset = "BIG-5";
