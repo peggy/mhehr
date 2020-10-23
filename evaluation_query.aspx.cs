@@ -57,9 +57,11 @@ public partial class evaluation_query : System.Web.UI.Page
         if (!IsPostBack)//第一次執行本程式
         {
             //連結資料庫 讀取HRS部門、HRS職稱、讀取資料(s)------------------------------------------------------------------------------------------------------------------------
+            //ddl_e_opening(職缺查詢)
             sql_str = "select paak003 FROM  EHRS.hrs_mis.dbo.WPAak where paak001 = 'MING'";
             DB_search(sql_str, "dr", "ddl_e_opening");
 
+            //ddl_e_dept(部門查詢)
             if (arr_auth[0] == "21")//查詢生產部底下部門
             {
                 sql_str = "select distinct REPLACE(REPLACE([pa11003],'常日',''),'輪班','') FROM  EHRS.hrs_mis.dbo.WPA11 where pa11001 = 'MING' and [pa11003] in ('生產部','工程課','生管課','安環課','物料課','品管課','倉管課','製造課','製程課')";
@@ -70,18 +72,19 @@ public partial class evaluation_query : System.Web.UI.Page
             }
             DB_search(sql_str, "dr", "ddl_e_dept");
 
+            //gv_evaluation(GridView綁定)
             if (arr_auth[0] == "21")//查詢生產部底下部門
             {
-                sql_str = "SELECT top(10)e_id as 序號,e_empno as 工號, e_name as 姓名, e_opening as 職稱, e_dept as 部門, e_change as 項目, e_start_date as 考核開始日, e_end_date as 考核結束日 " +
+                sql_str = "SELECT top(10)e_id as 序號,e_empno as 工號, e_name as 姓名, e_opening as 職稱, e_dept as 部門, e_change as 項目, e_start_date as 考核開始日, e_end_date as 考核結束日, ep_a_state as 未考核 " +
                       "FROM[dbo].[HR_evaluation] " +
-                      "where e_dept in  ('生產部', '工程課', '生管課', '安環課', '物料課', '品管課', '倉管課', '製造課', '製程課') " +
+                      "where e_dept in  ('生產部', '工程課', '生管課', '安環課', '物料課', '品管課', '倉管課', '製造課', '製程課')  and ep_a_state = '未考核' " +
                       "order by ep_res_time desc, ep_res_check_time desc,e_modify_time desc ";
             }
             else
             {
-                sql_str = "SELECT top(10)e_id as 序號,e_empno as 工號, e_name as 姓名, e_opening as 職稱, e_dept as 部門, e_change as 項目, e_start_date as 考核開始日, e_end_date as 考核結束日 " +
+                sql_str = "SELECT top(10)e_id as 序號,e_empno as 工號, e_name as 姓名, e_opening as 職稱, e_dept as 部門, e_change as 項目, e_start_date as 考核開始日, e_end_date as 考核結束日, ep_a_state as 未考核 " +
                       "FROM[dbo].[HR_evaluation] " +
-                      "where e_dept like @my_e_dept " +
+                      "where e_dept like @my_e_dept and ep_a_state = '未考核' " +
                       "order by ep_res_time desc, ep_res_check_time desc,e_modify_time desc ";
             }
                 
@@ -218,6 +221,15 @@ public partial class evaluation_query : System.Web.UI.Page
             hyper.ForeColor = System.Drawing.Color.FromArgb(58, 143, 183);
             hyper.NavigateUrl = "/evaluation_edit.aspx?ID=" + e.Row.Cells[0].Text + "&s=e";
             e.Row.Cells[0].Controls.Add(hyper);
+
+            if (e.Row.Cells[8].Text == "已考核")
+            {
+                e.Row.Attributes.Add("style", "color:#8E9EAB");
+            }
+            if (e.Row.Cells[8].Text == "結案")
+            {
+                e.Row.Attributes.Add("style", "color:#8E9AAF");
+            }
         }
     }
 
