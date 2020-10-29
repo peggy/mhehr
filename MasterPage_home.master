@@ -192,15 +192,15 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <asp:LinkButton ID="lb_st" Class="dropdown-item hya" runat="server" Visible="False">分機表</asp:LinkButton>
+                                <asp:LinkButton ID="lbtn_store_all" Class="dropdown-item hya" runat="server"  OnClick="lbtn_store_query_Click" Visible="False">特約商店</asp:LinkButton>
                             </li>
-                            <li class="dropdown-submenu text-center" style="padding-top:5px; padding-bottom:5px">
+                            <li class="dropdown-submenu text-center" id="li_s" runat="server" style="padding-top:5px; padding-bottom:5px" visible="False">
                                 <asp:LinkButton ID="lb_store" Class="dropdown-toggle hya" runat="server" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                    特約商店
                                 </asp:LinkButton>
                                 <ul class="dropdown-menu text-center">
-                                    <asp:LinkButton ID="lbtn_store_query" Class="dropdown-item hya" runat="server"  OnClick="lbtn_store_query_Click" >查詢</asp:LinkButton>
-                                    <asp:LinkButton ID="lbtn_store_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_store_edit_Click" Visible="False">編輯</asp:LinkButton>
+                                    <asp:LinkButton ID="lbtn_store_query" Class="dropdown-item hya" runat="server" PostBackUrl="/store_query.aspx">查詢</asp:LinkButton>
+                                    <asp:LinkButton ID="lbtn_store_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_store_edit_Click">編輯</asp:LinkButton>
                                 </ul>
                             </li>
                             <li>

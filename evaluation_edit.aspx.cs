@@ -397,14 +397,9 @@ public partial class evaluation_edit : System.Web.UI.Page
                 cmd.Parameters[str_para[i]].Value = decimal.Parse(rb_result[i]);
 
             }
-
-            if (rb_result[i] == "1" || rb_result[i] == "2") //若其中1項為尚可或差
-            {
-                tmp_com = 1;
-            }
         }
 
-        if (tb_ep_Comprehensive.Text == "" && tmp_com == 1 && rb_ep_pass_3.Checked) //若其中1項為尚可或差但通過，綜合表現必填。
+        if (tb_ep_Comprehensive.Text == "") //201029_雅婷：綜合表現必填。BY PEGGY
         {
             Record("提交錯誤-未輸入綜合表現。序號：" + tb_e_id.Text);
             Response.Write("<script language='javascript'>alert('請輸入「綜合表現」項目'); </script>");
@@ -459,7 +454,7 @@ public partial class evaluation_edit : System.Web.UI.Page
         cmd.Parameters.Add("@my_ep_res_check_user", SqlDbType.VarChar, 10);
         cmd.Parameters["@my_ep_res_check_user"].Value = str_s[1];
 
-        cmd.Parameters.Add("@my_ep_hr_remark", SqlDbType.VarChar, 10);
+        cmd.Parameters.Add("@my_ep_hr_remark", SqlDbType.VarChar, 200);
         cmd.Parameters["@my_ep_hr_remark"].Value = tb_ep_hr_remark.Text;
 
         cmd.Parameters.Add("@my_e_id", SqlDbType.VarChar, 10);

@@ -46,10 +46,14 @@ public partial class MasterPage_home : System.Web.UI.MasterPage
 
                 if (arr_auth[2] == "99" || arr_auth[2] == "10") //store
                 {
-                    lbtn_store_edit.Visible = true;
+                    li_s.Visible = true;
                     li_public.Visible = true;
                 }
-                li_public.Visible = true;
+                if (arr_auth[2] != "10")
+                {
+                    lbtn_store_all.Visible = true;
+                    li_public.Visible = true;
+                }
             }
             else
             {

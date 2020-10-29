@@ -134,7 +134,7 @@ public partial class store_query : System.Web.UI.Page
         }
         else
         {
-            SqlStr = "Select Right('000' + Cast(id as varchar),3) as ID, class as 屬性, name as 名稱, address as 地址,phone as 電話 from (select ROW_NUMBER() OVER(ORDER BY modify_time desc) AS 'RowNo', * from hr_store) as t Where t.RowNo Between @Page1 and @Page2";
+            SqlStr = "Select Right('000' + Cast(id as varchar),3) as ID, class as 屬性, name as 名稱, address as 地址,phone as 電話,modify_time as 修改時間 from (select ROW_NUMBER() OVER(ORDER BY modify_time desc) AS 'RowNo', * from hr_store) as t Where t.RowNo Between @Page1 and @Page2";
         }
 
         //新增ROWNUMBER資料欄 照順序排列
@@ -230,9 +230,23 @@ public partial class store_query : System.Web.UI.Page
         string[] arr_auth = DB_authority(str_s[1]);
 
         e.Row.Cells[0].Visible = false;
+        e.Row.Cells[6].Visible = false; //修改日期
 
         if (e.Row.RowType == DataControlRowType.DataRow)
-        { //超連結
+        {
+            //201029_Betty：近七天項目新增new圖示。BY PEGGY
+            DateTime dt_modify_time = DateTime.Parse(e.Row.Cells[6].Text);
+            DateTime dt_now_start = DateTime.Now.AddDays(-14);
+            DateTime dt_now = DateTime.Now;
+            if (DateTime.Compare(dt_modify_time, dt_now_start) >= 0 && DateTime.Compare(dt_now, dt_modify_time) >= 0)
+            {
+                Image img_new = new Image();
+                img_new.ImageUrl = "../img/store_new.png";
+                img_new.Width = 30;
+                e.Row.Cells[3].Controls.Add(img_new);
+            }
+
+            //超連結
             HyperLink hyper = new HyperLink();
             hyper.Text = e.Row.Cells[3].Text;
             hyper.ForeColor = System.Drawing.Color.FromArgb(76, 114, 108);
@@ -288,7 +302,7 @@ public partial class store_query : System.Web.UI.Page
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
         Conn.Open();
         SqlDataReader dr = null;
-        string sqlstr = "Select Right('000' + Cast(id as varchar),3) as ID, class as 屬性, name as 名稱, address as 地址,phone as 電話 from HR_store where class like '%' + @my_class + '%' order by id desc"; //200804：新增「修改人」查詢欄位。BY PEGGY
+        string sqlstr = "Select Right('000' + Cast(id as varchar),3) as ID, class as 屬性, name as 名稱, address as 地址,phone as 電話,modify_time as 修改日期 from HR_store where class like '%' + @my_class + '%' order by id desc"; //200804：新增「修改人」查詢欄位。BY PEGGY
         SqlCommand cmd = new SqlCommand(sqlstr, Conn);
         cmd.Parameters.Add("@my_class", SqlDbType.VarChar, 20);
         cmd.Parameters["@my_class"].Value = btn_txt;
@@ -319,7 +333,7 @@ public partial class store_query : System.Web.UI.Page
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
         Conn.Open();
         SqlDataReader dr = null;
-        string sqlstr = "Select Right('000' + Cast(id as varchar),3) as ID, class as 屬性, name as 名稱, address as 地址,phone as 電話 from HR_store where name like '%' + @my_name + '%' order by id desc"; //200804：新增「修改人」查詢欄位。BY PEGGY
+        string sqlstr = "Select Right('000' + Cast(id as varchar),3) as ID, class as 屬性, name as 名稱, address as 地址,phone as 電話,modify_time as 修改日期 from HR_store where name like '%' + @my_name + '%' order by id desc"; //200804：新增「修改人」查詢欄位。BY PEGGY
         SqlCommand cmd = new SqlCommand(sqlstr, Conn);
 
         if (tb_search_name.Text != "")
