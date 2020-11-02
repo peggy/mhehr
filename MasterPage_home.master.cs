@@ -25,7 +25,9 @@ public partial class MasterPage_home : System.Web.UI.MasterPage
 
               
                 string[] str_s = Session["OK"].ToString().Split('-');
-                string[] arr_auth = DB_authority(str_s[1]);
+                class_login cs_l = new class_login();
+                string[] arr_auth = cs_l.DB_authority(str_s[1], "masterpage");
+
 
                 if (arr_auth[0] == "99" || arr_auth[0] == "10") //interview
                 {
@@ -161,43 +163,4 @@ public partial class MasterPage_home : System.Web.UI.MasterPage
         return str_c_id;
     }
 
-
-
-    //讀取權限資料表，抓取個別權限
-    private string[] DB_authority(string name)
-    {
-        string[] arr_auth = new string[3]; //修改：新增欄位權限
-
-        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
-        Conn.Open();
-        SqlDataReader dr = null;
-
-        SqlCommand cmd = new SqlCommand("select interview,evaluation,store from dbo.hr_authority where name = @my_name", Conn);
-        cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 20);
-        cmd.Parameters["@my_name"].Value = name; //姓名
-
-        dr = cmd.ExecuteReader();
-
-        if (dr.HasRows)
-        {
-            //有資料。編輯
-            while (dr.Read())
-            {
-                for (int i = 0;i < arr_auth.Length;i++)
-                {
-                    arr_auth[i] = dr[i].ToString();//選擇個別權限欄位
-                }
-            }
-        }
-        cmd.Cancel();
-        Conn.Close();
-
-        return arr_auth;
-    }
-
-
-
-
-
-    
 }

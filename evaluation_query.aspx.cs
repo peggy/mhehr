@@ -11,7 +11,7 @@ using System.Data;
 using System.Text;
 using System.Runtime.InteropServices;
 
-public partial class evaluation_query : System.Web.UI.Page
+public partial class evaluation_query : class_login
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -22,7 +22,7 @@ public partial class evaluation_query : System.Web.UI.Page
 
         //權限(s)------------------------------------------------------------------------------
         string[] str_s = Session["OK"].ToString().Split('-');
-        string[] arr_auth = DB_authority(str_s[1]);
+        string[] arr_auth = DB_authority(str_s[1], "evaluation");
         string condition;
         if (arr_auth[0] == "99" || arr_auth[0] == "10")
         {
@@ -103,7 +103,7 @@ public partial class evaluation_query : System.Web.UI.Page
     protected void DBInit()
     {
         string[] str_s = Session["OK"].ToString().Split('-');
-        string[] arr_auth = DB_authority(str_s[1]);
+        string[] arr_auth = DB_authority(str_s[1], "evaluation");
 
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
         Conn.Open();
@@ -243,40 +243,6 @@ public partial class evaluation_query : System.Web.UI.Page
             }
         }
     }
-
-    //讀取權限資料表，抓取個別權限
-    //事件呼叫：PageLoad
-    private string[] DB_authority(string name)
-    {
-        string[] arr_auth = new string[1]; //修改：新增欄位權限
-
-        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
-        Conn.Open();
-        SqlDataReader dr = null;
-
-        SqlCommand cmd = new SqlCommand("select evaluation from dbo.hr_authority where name = @my_name", Conn);
-        cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 10);
-        cmd.Parameters["@my_name"].Value = name; //姓名
-
-        dr = cmd.ExecuteReader();
-
-        if (dr.HasRows)
-        {
-            //有資料。編輯
-            while (dr.Read())
-            {
-                for (int i = 0; i < arr_auth.Length; i++)
-                {
-                    arr_auth[i] = dr[i].ToString();//選擇個別權限欄位
-                }
-            }
-        }
-        cmd.Cancel();
-        Conn.Close();
-
-        return arr_auth;
-    }
-
 
     //連線資料庫，讀取資料：type=dr - 讀DataReader、type=gv - 綁定Gridview
     //事件呼叫：PageLoad

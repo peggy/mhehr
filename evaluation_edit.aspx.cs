@@ -18,7 +18,7 @@ using System.Runtime.CompilerServices;
 
 using System.IO;
 
-public partial class evaluation_edit : System.Web.UI.Page
+public partial class evaluation_edit : class_login
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -34,7 +34,7 @@ public partial class evaluation_edit : System.Web.UI.Page
         string[] str_s = Session["OK"].ToString().Split('-');
 
         //權限(s)-----------------------------------------------------------------------------------------------------
-        string[] arr_auth = DB_authority(str_s[1]);
+        string[] arr_auth = DB_authority(str_s[1], "evaluation");
         if (arr_auth[0] == "99") //管理者
         {
             btn_insert.Visible = true;
@@ -367,7 +367,6 @@ public partial class evaluation_edit : System.Web.UI.Page
 
         string[] str_para = new string[] { "@my_ep_ability", "@my_ep_attitude", "@my_ep_response", "@my_ep_relationship", "@my_ep_attendance", "@my_ep_level", "@my_ep_pass" };
         string[] str_ep = new string[] { "工作能力", "工作態度", "應對進退", "人際關係", "出勤狀況", "總考核", "試用期通過與否" };
-        Byte tmp_com = 0; //是否包含尚可或差的選項
         int tmp_ep = str_ep.Length; //計算考核項目是否皆以填寫
 
         string[] rb_result = new string[7];
@@ -557,38 +556,6 @@ public partial class evaluation_edit : System.Web.UI.Page
         {
             tb_e_end_date.Text = DateTime.Parse(tb_e_start_date.Text).AddMonths(3).AddDays(-1).ToString("yyyy-MM-dd");
         }
-    }
-
-    //讀取權限資料表，抓取個別權限
-    private string[] DB_authority(string name)
-    {
-        string[] arr_auth = new string[1]; //修改：新增欄位權限
-
-        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
-        Conn.Open();
-        SqlDataReader dr = null;
-
-        SqlCommand cmd = new SqlCommand("select evaluation from dbo.hr_authority where name = @my_name", Conn);
-        cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 20);
-        cmd.Parameters["@my_name"].Value = name; //姓名
-
-        dr = cmd.ExecuteReader();
-
-        if (dr.HasRows)
-        {
-            //有資料。編輯
-            while (dr.Read())
-            {
-                for (int i = 0; i < arr_auth.Length; i++)
-                {
-                    arr_auth[i] = dr[i].ToString();//選擇個別權限欄位
-                }
-            }
-        }
-        cmd.Cancel();
-        Conn.Close();
-
-        return arr_auth;
     }
 
     //jmail寄信

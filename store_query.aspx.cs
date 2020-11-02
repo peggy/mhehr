@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using System.IO; //檔案讀寫
 
 
-public partial class store_query : System.Web.UI.Page
+public partial class store_query : class_login
 {
     string btn_txt = null; //紀錄按鈕按下的文字
     protected void Page_Load(object sender, EventArgs e)
@@ -227,7 +227,7 @@ public partial class store_query : System.Web.UI.Page
     protected void gv_store_RowDataBound(object sender, GridViewRowEventArgs e)
     {
         string[] str_s = Session["OK"].ToString().Split('-');
-        string[] arr_auth = DB_authority(str_s[1]);
+        string[] arr_auth = DB_authority(str_s[1], "store");
 
         e.Row.Cells[0].Visible = false;
         e.Row.Cells[6].Visible = false; //修改日期
@@ -363,39 +363,6 @@ public partial class store_query : System.Web.UI.Page
         }
         lb_pages.Visible = false;
         lb_total_page.Visible = false;
-    }
-
-    //讀取權限資料表，抓取個別權限(回傳字串陣列為符合公版格式)
-    //事件呼叫：gv_store_RowDataBound
-    private string[] DB_authority(string name)
-    {
-        string[] arr_auth = new string[1]; //修改：新增欄位權限
-
-        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
-        Conn.Open();
-        SqlDataReader dr = null;
-
-        SqlCommand cmd = new SqlCommand("select store from dbo.hr_authority where name = @my_name", Conn);
-        cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 10);
-        cmd.Parameters["@my_name"].Value = name; //姓名
-
-        dr = cmd.ExecuteReader();
-
-        if (dr.HasRows)
-        {
-            //有資料。編輯
-            while (dr.Read())
-            {
-                for (int i = 0; i < arr_auth.Length; i++)
-                {
-                    arr_auth[i] = dr[i].ToString();//選擇個別權限欄位
-                }
-            }
-        }
-        cmd.Cancel();
-        Conn.Close();
-
-        return arr_auth;
     }
 
     //訪客計數：文字檔讀寫加一紀錄人次

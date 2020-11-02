@@ -9,8 +9,10 @@
             font-family: "Mocrosoft JhengHei UI","Helvetica Neue", Helvetica, Arial, "微軟正黑體", "微软雅黑", "メイリオ", "맑은 고딕", sans-serif;
         }
 
-        .bg {
-            background-image: url("../img/bg_masterpage.jpg");
+        body {
+            margin: 0px;
+            padding: 0px;
+            background:url('../img/bg_masterpage.jpg') center center fixed no-repeat;
             background-size: cover;
         }
 
@@ -25,7 +27,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-     <div class="bg">
         <div class="container">
             <div class="row">
                 <div class="wrap-headline text-center">
@@ -34,6 +35,5 @@
                 </div>
             </div>
         </div>
-    </div>
 </asp:Content>
 

@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 
 using System.IO; //檔案讀寫
 
-public partial class login : System.Web.UI.Page
+public partial class login : class_login
 {
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -59,7 +59,7 @@ public partial class login : System.Web.UI.Page
                     string att = sr.GetDirectoryEntry().Properties[atestarr[0]].Value.ToString();
                     string[] str_s = att.Split('-');
 
-                    if (DB(str_s[1]) == 1)
+                    if (DB_login_authority(str_s[1]) == 1)
                     {
                         Session["OK"] = att; //儲存顯示名稱
                         Record(); //紀錄登入使用者
@@ -81,24 +81,6 @@ public partial class login : System.Web.UI.Page
             Response.Write("<script language='javascript'>alert('使用者名稱或密碼不正確');</script>");
         }
 
-    }
-
-    //讀取權限資料表，判斷回傳值是否可登入
-    private int DB (string name)
-    {
-        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
-        Conn.Open();
-
-        SqlCommand cmd = new SqlCommand("select hr from dbo.hr_authority where name = @my_name", Conn);
-        cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 20);
-        cmd.Parameters["@my_name"].Value = name; //姓名
-
-        int hr = Convert.ToInt32(cmd.ExecuteScalar()); //回傳第一筆資料
-
-        cmd.Cancel();
-        Conn.Close();
-
-        return hr;
     }
 
     //以文字檔寫入，紀錄登入使用者
