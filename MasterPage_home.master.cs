@@ -33,7 +33,7 @@ public partial class MasterPage_home : System.Web.UI.MasterPage
                     lbtn_ii_edit.Visible= true; //編輯
                 }
 
-                if (arr_auth[1] == "99" || arr_auth[1] == "10") //evaluation
+                if (arr_auth[1] == "99" || arr_auth[1] == "10" || arr_auth[1] == "11") //evaluation
                 {
                     li_e.Visible = true; //考核
                     lbtn_e_edit.Visible = true; //編輯
