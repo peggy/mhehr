@@ -463,8 +463,8 @@ public partial class interview_edit : System.Web.UI.Page
 
         string sql_cmd = null;
         sql_cmd = "INSERT INTO [dbo].[HR_evaluation]" +
-               "([e_id],[e_name],[e_empno],[e_opening],[e_dept],[e_start_date],[e_end_date],[e_change],[e_modify_user]) " +
-               "SELECT @my_e_id,@my_e_name,@my_e_empno,c.[paak003],REPLACE(REPLACE(b.[pa11003], '常日', ''), '輪班', '') as pa11003,@my_e_start_date,@my_e_end_date,@my_e_change,@my_e_modify_user " +
+               "([e_id],[e_name],[e_empno],[e_opening],[e_dept],[e_start_date],[e_end_date],[e_change],[e_modify_user],[ep_a_state]) " +
+               "SELECT @my_e_id,@my_e_name,@my_e_empno,c.[paak003],REPLACE(REPLACE(b.[pa11003], '常日', ''), '輪班', '') as pa11003,@my_e_start_date, DATEADD (day,-1, DATEADD ( month,3, @my_e_start_date)),@my_e_change,@my_e_modify_user,'未考核' " +
                "FROM [EHRS].[hrs_mis].[dbo].[WPA51] AS a INNER JOIN " +
                "[EHRS].[hrs_mis].[dbo].[WPA11] AS b ON a.[PA51014] = b.[PA11002] INNER JOIN " +
                "[EHRS].[hrs_mis].[dbo].[WPAAK] AS c ON a.[pa51135] = c.[paak002] " +
@@ -483,10 +483,6 @@ public partial class interview_edit : System.Web.UI.Page
 
         cmd_insert_e.Parameters.Add("@my_e_start_date", SqlDbType.VarChar, 10);
         cmd_insert_e.Parameters["@my_e_start_date"].Value = tb_r_time.Text; //考核開始日
-
-        dt_e_end_date = DateTime.Parse(tb_r_time.Text).AddMonths(3).AddDays(-1);
-        cmd_insert_e.Parameters.Add("@my_e_end_date", SqlDbType.VarChar, 10);
-        cmd_insert_e.Parameters["@my_e_end_date"].Value = dt_e_end_date; //考核結束日
         
         cmd_insert_e.Parameters.Add("@my_e_change", SqlDbType.VarChar, 10);
         cmd_insert_e.Parameters["@my_e_change"].Value = "新人"; //項目

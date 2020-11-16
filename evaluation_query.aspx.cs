@@ -24,7 +24,7 @@ public partial class evaluation_query : class_login
         string[] str_s = Session["OK"].ToString().Split('-');
         string[] arr_auth = DB_authority(str_s[1], "evaluation");
         string condition;
-        if (arr_auth[0] == "99" || arr_auth[0] == "10")
+        if (arr_auth[0] == "99" || arr_auth[0] == "10" || arr_auth[0] == "11")
         {
             condition = "%";
             lb_e_dept.Visible = true;
