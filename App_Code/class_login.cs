@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Data.SqlClient;
 using System.Data;
+using System.IO;
 
 /// <summary>
 /// class_login 的摘要描述
@@ -43,13 +44,13 @@ public class class_login : System.Web.UI.Page
     //new-事件呼叫：masterpage_home
     public string[] DB_authority(string name, string type)
     {
-        string[] arr_auth = new string[3]; //修改：新增欄位權限
+        string[] arr_auth = new string[4]; //修改：新增欄位權限
 
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
         Conn.Open();
         SqlDataReader dr = null;
 
-        SqlCommand cmd = new SqlCommand("select interview,evaluation,store from dbo.hr_authority where name = @my_name", Conn);
+        SqlCommand cmd = new SqlCommand("select interview,evaluation,store,extension from dbo.hr_authority where name = @my_name", Conn);
         cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 20);
         cmd.Parameters["@my_name"].Value = name; //姓名
 
@@ -81,5 +82,71 @@ public class class_login : System.Web.UI.Page
         Conn.Close();
 
         return arr_auth;
+    }
+
+    //檔案讀寫：寫入counter_store
+    //new-事件呼叫：masterpage_home
+    public void record_store_count()
+    {
+        //讀取檔案 (務必修改這個檔案的權限，需要「寫入」的權限)
+        StreamReader sr = new StreamReader(Server.MapPath("counter_store.txt"));
+
+        //把檔案內, 原本的訪客人數[加一]
+        string visitors = sr.ReadLine();
+        visitors = Convert.ToString(Convert.ToInt32(visitors) + 1);
+        sr.Close();
+        sr.Dispose();
+
+
+        //寫入檔案
+        StreamWriter sw = new StreamWriter(Server.MapPath("counter_store.txt"));
+        sw.WriteLine(visitors);
+        sw.Close();
+        sw.Dispose();
+
+    }
+
+    //檔案讀寫：寫入record_extension_log
+    //繼承-事件呼叫：masterpage_home
+    public void record_extension_log(string type, string str)
+    {
+        string path = null;
+        string login_name = null;
+        if (type == "extension_log") //增刪分機表
+        {
+            path = "E:\\HR\\file\\record_extension_log.txt";
+        }
+        else if (type == "extension_user_log") //匯出Excel
+        {
+            path = "E:\\HR\\file\\record_extension_user_log.txt";
+        }
+        else if (type == "extension_load_log") //載入分機表
+        {
+            path = "E:\\HR\\file\\record_extension_load_log.txt";
+        }
+
+        //(務必修改這個檔案的權限，需要「寫入」的權限)
+        //寫入檔案
+        StreamWriter sw = new StreamWriter(path, true);
+        if (Session["OK"] != null)
+        {
+            string[] str_s = Session["OK"].ToString().Split('-');
+            login_name = str_s[1];
+            sw.Write(login_name);
+            sw.Write("---");
+        }
+        else
+        {
+            string ip = Page.Request.UserHostAddress;
+            sw.Write(ip);
+            sw.Write("---");
+        }
+        sw.Write(str);
+        sw.Write("---");
+        sw.Write(DateTime.Now.ToString());
+        sw.WriteLine();
+
+        sw.Close();
+        sw.Dispose();
     }
 }

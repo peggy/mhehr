@@ -192,6 +192,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
+                                <asp:LinkButton ID="lbtn_extension" Class="dropdown-item hya" runat="server"  PostBackUrl="~/extension.aspx">分機表</asp:LinkButton>
+                            </li>
+                            <li>
                                 <asp:LinkButton ID="lbtn_store_all" Class="dropdown-item hya" runat="server"  OnClick="lbtn_store_query_Click" Visible="False">特約商店</asp:LinkButton>
                             </li>
                             <li class="dropdown-submenu text-center" id="li_s" runat="server" style="padding-top:5px; padding-bottom:5px" visible="False">
@@ -204,7 +207,7 @@
                                 </ul>
                             </li>
                             <li>
-                                <%-- 第二層選項 --%>
+                                <asp:LinkButton ID="lbtn_extension_edit" Class="dropdown-item hya" runat="server"  PostBackUrl="~/extension_edit.aspx" Visible="False">分機表編輯</asp:LinkButton>
                             </li>
                         </ul>
                     </li>

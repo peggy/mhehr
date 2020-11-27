@@ -51,10 +51,14 @@ public partial class MasterPage_home : System.Web.UI.MasterPage
                     li_s.Visible = true;
                     li_public.Visible = true;
                 }
-                if (arr_auth[2] != "10")
+                if (arr_auth[2] != "10") //store
                 {
                     lbtn_store_all.Visible = true;
                     li_public.Visible = true;
+                }
+                if (arr_auth[3] == "99") //extension
+                {
+                    lbtn_extension_edit.Visible = true;
                 }
             }
             else
@@ -99,21 +103,8 @@ public partial class MasterPage_home : System.Web.UI.MasterPage
     //計數訪客人數
     protected void lbtn_store_query_Click(object sender, EventArgs e)
     {
-        //讀取檔案 (務必修改這個檔案的權限，需要「寫入」的權限)
-        StreamReader sr = new StreamReader(Server.MapPath("counter_store.txt"));
-
-        //把檔案內, 原本的訪客人數[加一]
-        string visitors = sr.ReadLine();
-        visitors = Convert.ToString(Convert.ToInt32(visitors) + 1);
-        sr.Close();
-        sr.Dispose();
-
-
-        //寫入檔案
-        StreamWriter sw = new StreamWriter(Server.MapPath("counter_store.txt"));
-        sw.WriteLine(visitors);
-        sw.Close();
-        sw.Dispose();
+        class_login cs_l = new class_login();
+        cs_l.record_store_count(); //訪客人數加一寫入
 
         Response.Redirect("/store_query.aspx");
     }
