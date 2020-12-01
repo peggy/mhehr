@@ -22,21 +22,49 @@ public class class_login : System.Web.UI.Page
 
     //讀取權限資料表，判斷回傳值是否可登入
     //事件呼叫：login
-    public int DB_login_authority(string name)
+    public string DB_login_authority(string account, string password, string type)
     {
+        string sql_str = null;
+        string auth = null;
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
         Conn.Open();
 
-        SqlCommand cmd = new SqlCommand("select hr from dbo.hr_authority where name = @my_name", Conn);
-        cmd.Parameters.Add("@my_name", SqlDbType.VarChar, 20);
-        cmd.Parameters["@my_name"].Value = name; //姓名
+        if (type == "AD")
+        {
+            sql_str = "select hr from dbo.hr_authority where account = @my_account";
+        }
+        if (type == "NAD")
+        {
+            sql_str = "SELECT department,make_us FROM [MHEDB].[dbo].[MHE_user] where work_no = @my_account and user_id = " + password;
+        }
 
-        int hr = Convert.ToInt32(cmd.ExecuteScalar()); //回傳第一筆資料
+        SqlCommand cmd = new SqlCommand(sql_str, Conn);
+        cmd.Parameters.Add("@my_account", SqlDbType.VarChar, 30);
+        cmd.Parameters["@my_account"].Value = account; //帳號
+
+        if (type == "AD")
+        {
+            auth = cmd.ExecuteScalar().ToString(); //回傳第一筆資料
+        }
+
+        if (type == "NAD")
+        {
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    auth = dr[0].ToString(); //部門
+                    auth += "-";
+                    auth += dr[1].ToString(); //人名
+                }
+            }
+        }
 
         cmd.Cancel();
         Conn.Close();
 
-        return hr;
+        return auth;
     }
 
     //讀取權限資料表，以各網頁類型判斷個別權限
