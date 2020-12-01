@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage_home.master" AutoEventWireup="true" CodeFile="extension.aspx.cs" Inherits="extension" %>
+﻿<%@ Page Title="明徽能源分機表" Language="C#" MasterPageFile="~/MasterPage_home.master" AutoEventWireup="true" CodeFile="extension.aspx.cs" Inherits="extension" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />

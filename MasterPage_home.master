@@ -4,6 +4,7 @@
 
 <html>
 <head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!--BootStrap-->
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
@@ -14,7 +15,7 @@
     <script src="Scripts/moment.min.js"></script>
     <script src="Scripts/bootstrap-datetimepicker.min.js"></script>
     <link href="packages/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
-    <link href="packages/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker-standalone.css" rel="stylesheet" />
+    <%--<link href="packages/bootstrap-datetimepicker-master/build/css/bootstrap-datetimepicker-standalone.css" rel="stylesheet" />--%>
     <link href="packages/glyphicons-only-bootstrap-master/css/bootstrap.css" rel="stylesheet" />
     <!-- jQuery -->
     <link href="Content/jQuery-1.12.1-ui.css" rel="stylesheet" />
@@ -28,7 +29,7 @@
         /*/*指定LinkButton文字顏色*/
         .hya {
             color: gray;
-            text-align:center;
+            text-align: center;
         }
 
             /*指定LinkButton 滑鼠移動過後的效果*/
@@ -36,6 +37,10 @@
                 text-decoration: none;
                 color: black;
             }
+
+        .collapse.in {
+            display: block;
+        }
 
         .navbar-nav li:hover > ul.dropdown-menu {
             display: block;
@@ -185,68 +190,76 @@
             <nav class="navbar sticky-top navbar-expand-lg navbar-expand-sm navbar-light bg-light">
                 <a class="navbar-brand" style="font-family: 'Playfair Display'">MHEHR</a>
 
-                <ul class="navbar-nav">
-                    <li class="dropdown" id="li_public" runat="server" visible="False">
-                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <asp:Label ID="lb_public" runat="server" Text="公佈欄"></asp:Label>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <asp:LinkButton ID="lbtn_extension" Class="dropdown-item hya" runat="server"  PostBackUrl="~/extension.aspx">分機表</asp:LinkButton>
-                            </li>
-                            <li>
-                                <asp:LinkButton ID="lbtn_store_all" Class="dropdown-item hya" runat="server"  OnClick="lbtn_store_query_Click" Visible="False">特約商店</asp:LinkButton>
-                            </li>
-                            <li class="dropdown-submenu text-center" id="li_s" runat="server" style="padding-top:5px; padding-bottom:5px" visible="False">
-                                <asp:LinkButton ID="lb_store" Class="dropdown-toggle hya" runat="server" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <%-- 漢堡icon --%>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="navbar-collapse" class="navbar-collapse navbar-collapse">
+                    <ul class="navbar-nav">
+                        <li class="dropdown" id="li_public" runat="server" visible="False">
+                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <asp:Label ID="lb_public" runat="server" Text="公佈欄"></asp:Label>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <asp:LinkButton ID="lbtn_extension" Class="dropdown-item hya" runat="server" PostBackUrl="~/extension.aspx">分機表</asp:LinkButton>
+                                </li>
+                                <li>
+                                    <asp:LinkButton ID="lbtn_store_all" Class="dropdown-item hya" runat="server" OnClick="lbtn_store_query_Click" Visible="False">特約商店</asp:LinkButton>
+                                </li>
+                                <li class="dropdown-submenu text-center" id="li_s" runat="server" style="padding-top: 5px; padding-bottom: 5px"
+                                    visible="False">
+                                    <asp:LinkButton ID="lb_store" Class="dropdown-toggle hya" runat="server" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                    特約商店
-                                </asp:LinkButton>
-                                <ul class="dropdown-menu text-center">
-                                    <asp:LinkButton ID="lbtn_store_query" Class="dropdown-item hya" runat="server" PostBackUrl="/store_query.aspx">查詢</asp:LinkButton>
-                                    <asp:LinkButton ID="lbtn_store_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_store_edit_Click">編輯</asp:LinkButton>
-                                </ul>
-                            </li>
-                            <li>
-                                <asp:LinkButton ID="lbtn_extension_edit" Class="dropdown-item hya" runat="server"  PostBackUrl="~/extension_edit.aspx" Visible="False">分機表編輯</asp:LinkButton>
-                            </li>
-                        </ul>
-                    </li>
+                                    </asp:LinkButton>
+                                    <ul class="dropdown-menu text-center">
+                                        <asp:LinkButton ID="lbtn_store_query" Class="dropdown-item hya" runat="server" PostBackUrl="/store_query.aspx">查詢</asp:LinkButton>
+                                        <asp:LinkButton ID="lbtn_store_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_store_edit_Click">編輯</asp:LinkButton>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <asp:LinkButton ID="lbtn_extension_edit" Class="dropdown-item hya" runat="server" PostBackUrl="~/extension_edit.aspx" Visible="False">分機表編輯</asp:LinkButton>
+                                </li>
+                            </ul>
+                        </li>
 
-                    <li class="nav-item dropdown" id="li_ii" runat="server" visible="False">
-                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <asp:Label ID="lb_ii" runat="server" Text="招募"></asp:Label>
-                        </a>
-                        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item dropdown" id="li_ii" runat="server" visible="False">
+                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <asp:Label ID="lb_ii" runat="server" Text="招募"></asp:Label>
+                            </a>
+                            <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
 
-                            <asp:LinkButton ID="lbtn_ii_query" Class="dropdown-item hya" runat="server" PostBackUrl="~/interview_query.aspx">查詢</asp:LinkButton>
-                            <asp:LinkButton ID="lbtn_ii_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_interview_edit_Click">編輯</asp:LinkButton>
-                        </div>
-                    </li>
+                                <asp:LinkButton ID="lbtn_ii_query" Class="dropdown-item hya" runat="server" PostBackUrl="~/interview_query.aspx">查詢</asp:LinkButton>
+                                <asp:LinkButton ID="lbtn_ii_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_interview_edit_Click">編輯</asp:LinkButton>
+                            </div>
+                        </li>
 
-                    <li class="nav-item dropdown" id="li_e" runat="server" visible="False">
-                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <asp:Label ID="lb_e" runat="server" Text="考核"></asp:Label>
-                        </a>
-                        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+                        <li class="nav-item dropdown" id="li_e" runat="server" visible="False">
+                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <asp:Label ID="lb_e" runat="server" Text="考核"></asp:Label>
+                            </a>
+                            <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
 
-                            <asp:LinkButton ID="lbtn_e_query" Class="dropdown-item hya" runat="server" PostBackUrl="~/evaluation_query.aspx">查詢</asp:LinkButton>
-                            <asp:LinkButton ID="lbtn_e_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_e_edit_Click" Visible="False">編輯</asp:LinkButton>
+                                <asp:LinkButton ID="lbtn_e_query" Class="dropdown-item hya" runat="server" PostBackUrl="~/evaluation_query.aspx">查詢</asp:LinkButton>
+                                <asp:LinkButton ID="lbtn_e_edit" Class="dropdown-item hya" runat="server" OnClick="lbtn_e_edit_Click" Visible="False">編輯</asp:LinkButton>
 
-                        </div>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item dropdown dropleft">
-                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <asp:Label ID="lb_login_name" runat="server" Text="Label"></asp:Label>
-                        </a>
-                        <div class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
-                            <asp:LinkButton ID="lbtn_login" Class="dropdown-item hya" runat="server" OnClick="lbtn_login_Click">Login</asp:LinkButton>
-                            <a class="dropdown-item" style="font-size: smaller; display: none;" id="ddi_timer">倒數<span id='timer_min'>19 </span>分<span id='timer_sec'>59 </span>秒登出</a>
-                        </div>
-                    </li>
-                </ul>
-
+                            </div>
+                        </li>
+                    </ul>
+                    <hr class="d-block d-sm-block d-md-none" style="width:100%"  />
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item dropdown  dropdown-menu-right">
+                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <asp:Label ID="lb_login_name" runat="server" Text="Label"></asp:Label>
+                            </a>
+                            <div class="dropdown-menu  dropdown-menu-right text-center" aria-labelledby="navbarDropdownMenuLink">
+                                <asp:LinkButton ID="lbtn_login" Class="dropdown-item hya" runat="server" OnClick="lbtn_login_Click">Login</asp:LinkButton>
+                                <a class="dropdown-item" style="font-size: smaller; display: none;"
+                                    id="ddi_timer">倒數<span id='timer_min'>19 </span>分<span id='timer_sec'>59 </span>秒登出</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </nav>
 
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
