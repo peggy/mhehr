@@ -194,7 +194,7 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div id="navbar-collapse" class="navbar-collapse navbar-collapse">
+                <div id="navbar-collapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav">
                         <li class="dropdown" id="li_public" runat="server" visible="False">
                             <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -255,7 +255,7 @@
                             <div class="dropdown-menu  dropdown-menu-right text-center" aria-labelledby="navbarDropdownMenuLink">
                                 <asp:LinkButton ID="lbtn_login" Class="dropdown-item hya" runat="server" OnClick="lbtn_login_Click">Login</asp:LinkButton>
                                 <a class="dropdown-item" style="font-size: smaller; display: none;"
-                                    id="ddi_timer">倒數<span id='timer_min'>19 </span>分<span id='timer_sec'>59 </span>秒登出</a>
+                                    id="ddi_timer">倒數<span id='timer_min'>39 </span>分<span id='timer_sec'>59 </span>秒登出</a>
                             </div>
                         </li>
                     </ul>
