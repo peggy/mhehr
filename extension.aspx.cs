@@ -185,7 +185,7 @@ public partial class extension : class_login
             else if (ddl_export.SelectedValue == "直向")
             {
                 col_gp_max = 6; //共6欄
-                add_row = 10; //預留列數(標題、部門)
+                add_row = 15; //預留列數(標題、部門)
                 //計算群組的所有列數
                 for (int i = 0; i < gv_gp_5.Length; i++) //注意最大列(暫定第一群組的列數)
                 {

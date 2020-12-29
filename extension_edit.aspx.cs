@@ -29,7 +29,7 @@ public partial class extension_edit : class_login
 
         DB_store(sql_cmd);
 
-        record_extension_log("extension_log", "新增資料。姓名：" + tb_ext_name.Text + "。部門：" + ddl_dept.SelectedValue + "。手機簡碼：" + tb_ext_phone.Text);
+        record_extension_log("extension_log", "新增資料。序號" + tb_id_name.Text + "姓名：" + tb_ext_name.Text + "。部門：" + ddl_dept.SelectedValue + "。手機簡碼：" + tb_ext_phone.Text);
         Response.Write("<script language='javascript'>alert('新增完成! 姓名：" + tb_ext_name.Text + "'); </script>");
         DB_init_gv();
     }
@@ -69,11 +69,6 @@ public partial class extension_edit : class_login
     protected void tb_ext_name_TextChanged(object sender, EventArgs e)
     {
         ddl_dept.SelectedValue = "%";
-        //tb_id_name.Text = "";
-        //tb_id_dept.Text = "";
-        //tb_ext.Text = "";
-        //tb_class.Text = "";
-        //tb_ext_phone.Text = "";
     }
 
     //讀取資料表：判斷部門，帶入部門的序號及人員序號
@@ -269,6 +264,7 @@ public partial class extension_edit : class_login
     //GridView 刪除
     protected void gv_extension_edit_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
+       
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
         Conn.Open();
 
@@ -290,8 +286,8 @@ public partial class extension_edit : class_login
             Conn.Close();
             Conn.Dispose();
         }
-        record_extension_log("extension_log", "刪除資料。姓名：" + tb_ext_name.Text + "。部門：" + ddl_dept.SelectedValue + "。手機簡碼：" + tb_ext_phone.Text);
-        Response.Write("<script language='javascript'>alert('刪除一筆資料完成! 姓名：" + tb_ext_name.Text + "');</script>");
+        record_extension_log("extension_log", "刪除資料。序號：" + gv_extension_edit.Rows[e.RowIndex].Cells[2].Text + "姓名：" + gv_extension_edit.DataKeys[e.RowIndex].Value + "。部門：" + gv_extension_edit.Rows[e.RowIndex].Cells[8].Text + "。手機簡碼：" + gv_extension_edit.Rows[e.RowIndex].Cells[5].Text);
+        Response.Write("<script language='javascript'>alert('刪除一筆資料完成! 姓名：" + gv_extension_edit.DataKeys[e.RowIndex].Value + "');</script>");
 
         DB_init_gv();
     }
@@ -346,7 +342,7 @@ public partial class extension_edit : class_login
             Conn.Close();
             Conn.Dispose();
         }
-        record_extension_log("extension_log", "修改資料。姓名：" + tb_ext_name.Text + "。部門：" + ddl_dept.SelectedValue + "。手機簡碼：" + tb_ext_phone.Text);
+        record_extension_log("extension_log", "修改資料。序號：" + myt_id_name.Text + "姓名：" + gv_extension_edit.DataKeys[e.RowIndex].Value + "。部門：" + myt_dept.Text + "。手機簡碼：" + myt_ext_phone.Text);
 
         gv_extension_edit.EditIndex = -1;
         DB_init_gv();
