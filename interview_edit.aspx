@@ -87,11 +87,13 @@
                         <%--200803_Betty：新增「廠務人員」職缺。BY PEGGY  --%>
                         <%--200803_Betty：新增「會計人員」職缺。BY PEGGY  --%>
                         <%--201020_家瑋：新增「品管工程師」職缺。BY PEGGY  --%>
+                        <%--201202_家瑋：新增「產線領班」職缺。BY PEGGY  --%>
                         <asp:TableCell runat="server">
                             <asp:DropDownList ID="ddl_c_opening" runat="server" Width="130px" required>
                                 <asp:ListItem Value="請選擇">請選擇</asp:ListItem>
                                 <asp:ListItem Value="業務代表">業務代表</asp:ListItem>
                                 <asp:ListItem Value="會計人員">會計人員</asp:ListItem>
+                                <asp:ListItem Value="產線領班">產線領班</asp:ListItem>
                                 <asp:ListItem Value="清潔人員">清潔人員</asp:ListItem>
                                 <asp:ListItem Value="廠務人員">廠務人員</asp:ListItem>
                                  <asp:ListItem Value="目檢人員">目檢人員</asp:ListItem>
