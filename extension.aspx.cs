@@ -22,8 +22,8 @@ public partial class extension : class_login
     {
         if (!IsPostBack)//第一次執行本程式
         {
-            string[] str_arr = DB_init_dept(lb_1_1, lb_1_2, lb_1_3, lb_1_4, lb_1_5, lb_1_6,lb_1_7, lb_2_1, lb_2_2, lb_2_3, lb_2_4, lb_3_1, lb_3_2, lb_3_3, lb_3_4, lb_3_5,  lb_4_1, lb_4_2, lb_4_3); //讀取部門
-            DB_init_gv(str_arr, gv_1_1, gv_1_2, gv_1_3, gv_1_4, gv_1_5, gv_1_6,gv_1_7, gv_2_1, gv_2_2, gv_2_3, gv_2_4, gv_3_1, gv_3_2, gv_3_3, gv_3_4, gv_3_5, gv_4_1, gv_4_2, gv_4_3);
+            string[] str_arr = DB_init_dept(lb_1_1, lb_1_2, lb_1_3, lb_1_4, lb_1_5, lb_1_6,lb_1_7, lb_2_1, lb_2_2, lb_2_3, lb_3_1, lb_3_2, lb_3_3, lb_3_4, lb_3_5,  lb_4_1, lb_4_2, lb_4_3); //讀取部門
+            DB_init_gv(str_arr, gv_1_1, gv_1_2, gv_1_3, gv_1_4, gv_1_5, gv_1_6,gv_1_7, gv_2_1, gv_2_2, gv_2_3, gv_3_1, gv_3_2, gv_3_3, gv_3_4, gv_3_5, gv_4_1, gv_4_2, gv_4_3);
             record_extension_log("extension_load_log", "load");
         }
     }
@@ -126,20 +126,20 @@ public partial class extension : class_login
 
             //for 橫向
             Label[] lb_gp_1 = new Label[] { lb_1_1, lb_1_2, lb_1_3, lb_1_4, lb_1_5, lb_1_6,lb_1_7 };
-            Label[] lb_gp_2 = new Label[] { lb_2_1, lb_2_2, lb_2_3, lb_2_4 };
+            Label[] lb_gp_2 = new Label[] { lb_2_1, lb_2_2, lb_2_3 };
             Label[] lb_gp_3 = new Label[] { lb_3_1, lb_3_2, lb_3_3, lb_3_4, lb_3_5 };
             Label[] lb_gp_4 = new Label[] { lb_4_1, lb_4_2, lb_4_3 };
 
             GridView[] gv_gp_1 = new GridView[] { gv_1_1, gv_1_2, gv_1_3, gv_1_4, gv_1_5, gv_1_6,gv_1_7 };
-            GridView[] gv_gp_2 = new GridView[] { gv_2_1, gv_2_2, gv_2_3, gv_2_4 };
+            GridView[] gv_gp_2 = new GridView[] { gv_2_1, gv_2_2, gv_2_3 };
             GridView[] gv_gp_3 = new GridView[] { gv_3_1, gv_3_2, gv_3_3, gv_3_4, gv_3_5 };
             GridView[] gv_gp_4 = new GridView[] { gv_4_1, gv_4_2, gv_4_3 };
             //for 直向
             Label[] lb_gp_5 = new Label[] { lb_1_1, lb_1_2, lb_1_3, lb_1_4 ,lb_2_1,lb_1_5,lb_3_2,lb_3_3,lb_3_5,lb_4_1,lb_1_7};
-            Label[] lb_gp_6 = new Label[] { lb_3_4,lb_2_2,lb_2_3,lb_2_4,lb_3_1,lb_4_2};
+            Label[] lb_gp_6 = new Label[] { lb_3_4,lb_2_2,lb_2_3,lb_3_1,lb_4_2};
 
             GridView[] gv_gp_5 = new GridView[] { gv_1_1, gv_1_2, gv_1_3, gv_1_4 , gv_2_1, gv_1_5, gv_3_2, gv_3_3, gv_3_5, gv_4_1, gv_1_7};
-            GridView[] gv_gp_6 = new GridView[] { gv_3_4,gv_2_2,gv_2_3,gv_2_4,gv_3_1, gv_4_2 };
+            GridView[] gv_gp_6 = new GridView[] { gv_3_4,gv_2_2,gv_2_3,gv_3_1, gv_4_2 };
 
             int row_gp_1 = 0, row_gp_2 = 0, row_gp_3 = 0, row_gp_4 = 0, row_gp_5 = 0, row_gp_6 = 0;
             int row_gp_max = 0;

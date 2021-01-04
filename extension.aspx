@@ -76,8 +76,6 @@
                 <asp:GridView ID="gv_2_2" runat="server" Class="table table-bordered table-sm table-hover text-center"></asp:GridView>
                 <asp:Label ID="lb_2_3" runat="server" Width="100%" Class="table-warning table-bordered"></asp:Label>
                 <asp:GridView ID="gv_2_3" runat="server" Class="table table-bordered table-sm table-hover text-center"></asp:GridView>
-                <asp:Label ID="lb_2_4" runat="server" Width="100%" Class="table-warning table-bordered"></asp:Label>
-                <asp:GridView ID="gv_2_4" runat="server" Class="table table-bordered table-sm table-hover text-center"></asp:GridView>
             </div>
             <div class="col-12 col-md-6 col-lg-3  text-center">
                 <asp:Label ID="lb_3_1" runat="server" Width="100%" Class="table-warning table-bordered"></asp:Label>
