@@ -23,6 +23,11 @@ public partial class login : class_login
         {
             Session.Clear();
             Session.Abandon();
+            HttpBrowserCapabilities hbc = Request.Browser;
+            if (hbc.Browser.ToString() != "Chrome")
+            {
+                Response.Write("<script language='javascript'>alert('錯誤!請使用Chrome瀏覽器開啟');location.href='https://www.google.com/'</script>");
+            }
         }
     }
 
@@ -50,7 +55,9 @@ public partial class login : class_login
             if (DB_login_authority(ad_id, ad_ps, "NAD") != null)
             {
                 Session["OK"] = DB_login_authority(ad_id, ad_ps, "NAD"); //儲存顯示名稱
-                Record(); //紀錄登入使用者
+                Session["id"] = ad_id; //儲存工號
+                Session["ac"] = ad_id; //儲存帳號
+                Record("NAD"); //紀錄登入使用者
                 Response.Redirect("blank.aspx"); //登入成功跳轉空白頁面
                 return;
             }
@@ -77,8 +84,10 @@ public partial class login : class_login
                     if (DB_login_authority(ad_id, ad_ps, "AD") == "1")
                     {
                         Session["OK"] = att; //儲存顯示名稱
+                        Session["ac"] = ad_id; //儲存帳號
                         Record(); //紀錄登入使用者
                         Response.Redirect("blank.aspx"); //登入成功跳轉空白頁面
+                        return;
                     }
                     else
                     {
@@ -93,19 +102,19 @@ public partial class login : class_login
         }
         catch (Exception ex)
         {
-            Response.Write("<script language='javascript'>alert('使用者名稱或密碼不正確');</script>");
+            Response.Write("<script language='javascript'>alert('使用者名稱及密碼不正確');</script>");
         }
 
     }
 
     //以文字檔寫入，紀錄登入使用者
-    public void Record()
+    public void Record([Optional]string type)
     {
         string[] str_s = Session["OK"].ToString().Split('-');
         string login_name = str_s[1];
         //(務必修改這個檔案的權限，需要「寫入」的權限)
         //寫入檔案
-        StreamWriter sw = new StreamWriter("E:\\hr\\file\\login_log.txt", true);
+        StreamWriter sw = new StreamWriter("E:\\HR\\file\\login_log.txt", true);
         sw.Write(login_name);
         sw.Write("---");
         sw.Write(DateTime.Now.ToString());

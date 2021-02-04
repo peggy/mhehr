@@ -174,6 +174,20 @@
                 dateFormat: "yy-mm-dd"
             });
         });
+
+        //班表
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_cs_start_date').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+
+        jQuery(function () {
+            jQuery('#ContentPlaceHolder1_tb_cs_end_date').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        });
+        
         //日期設置(e)----------------------------------------------------------------------------
 
     </script>
@@ -196,7 +210,7 @@
                 </button>
                 <div id="navbar-collapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav">
-                        <li class="dropdown" id="li_public" runat="server" visible="False">
+                        <li class="dropdown" id="li_public" runat="server">
                             <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <asp:Label ID="lb_public" runat="server" Text="公佈欄"></asp:Label>
                             </a>
@@ -220,6 +234,18 @@
                                 <li>
                                     <asp:LinkButton ID="lbtn_extension_edit" Class="dropdown-item hya" runat="server" PostBackUrl="~/extension_edit.aspx" Visible="False">分機表編輯</asp:LinkButton>
                                 </li>
+                            </ul>
+                        </li>
+
+                         <li class="nav-item dropdown" id="li_p" runat="server" visible="False">
+                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown">
+                                <asp:Label ID="lb_personal" runat="server" Text="個人資料"></asp:Label>
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+                                <%--<li>
+                                    <asp:LinkButton ID="lbtn_personal" Class="dropdown-item hya" runat="server" PostBackUrl="~/personal.aspx" Visible="False">查詢</asp:LinkButton></li>--%>
+                                <%--<li>
+                                    <asp:LinkButton ID="lbtn_class_schedule" Class="dropdown-item hya" runat="server" PostBackUrl="~/class_schedule.aspx">班表</asp:LinkButton></li>--%>
                             </ul>
                         </li>
 
@@ -255,17 +281,34 @@
                             <div class="dropdown-menu  dropdown-menu-right text-center" aria-labelledby="navbarDropdownMenuLink">
                                 <asp:LinkButton ID="lbtn_login" Class="dropdown-item hya" runat="server" OnClick="lbtn_login_Click">Login</asp:LinkButton>
                                 <a class="dropdown-item" style="font-size: smaller; display: none;"
-                                    id="ddi_timer">倒數<span id='timer_min'>39 </span>分<span id='timer_sec'>59 </span>秒登出</a>
+                                    id="ddi_timer">倒數<span id='timer_min'>19 </span>分<span id='timer_sec'>59 </span>秒登出</a>
+                                <asp:Label ID="lb_login_state" runat="server" Text="" ForeColor="White"></asp:Label>
                             </div>
                         </li>
                     </ul>
                 </div>
             </nav>
-
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>
-
         </div>
     </form>
+    <script>
+        (function () {
+            const txt = document.getElementById("lb_login_state");
+            if (txt.innerHTML == "1") {
+                localStorage.setItem('logged_in', 'false');
+            }
+            window.addEventListener('storage', (event) => {
+                if (event.key == 'logged_in' && event.newValue == 'true') {
+                    document.location.replace('/login.aspx');
+                }
+                else if (event.key == 'logged_in' && event.newValue == 'false') {
+                }
+                else {
+                    return;
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
