@@ -114,7 +114,7 @@ public partial class meal_edit : class_login
         //任何時間點可以訂明天之後的餐
         if (DateTime.Compare(dt_now,dt_meal) == 0)  //今天
         {
-            if (dt_limit(arr_auth) == false)//訂餐時間限制
+            if (dt_limit(arr_auth)[0] == false)//訂餐時間限制
             {
                 record_meal_log("ALERT。提交已超過訂餐時間。工號：" + tb_empno.Text + "，姓名：" + tb_name.Text, "meal");
                 Response.Write("<script language='javascript'>confirm('錯誤! 已超過訂餐時間');</script>");
@@ -261,28 +261,255 @@ public partial class meal_edit : class_login
         Response.Write("<script language='javascript'>confirm('提交完成');</script>");
     }
 
-    //刪除確認
-    protected void gv_meal_personal_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if (e.Row.RowType == DataControlRowType.Header)
-        {
-            e.Row.Cells[1].Visible = false; 
-        }
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            e.Row.Cells[1].Visible = false;
-            Button btn = (Button)e.Row.Cells[0].FindControl("btn_delete");
-            btn.OnClientClick = "javascript:return confirm('確定刪除?')";
-            DateTime dt_now = DateTime.Now;
-            DateTime dt_make_date = Convert.ToDateTime(e.Row.Cells[5].Text);
-            if (DateTime.Compare(dt_now,dt_make_date) >= 0) 
-            {
-                btn.Enabled = false;
-            }
-        }
+    protected void gv_meal_personal_RowCreated(object sender, GridViewRowEventArgs e)	
+    {	
+        if (e.Row.RowState == DataControlRowState.Edit || e.Row.RowState == (DataControlRowState.Edit | DataControlRowState.Alternate))	
+        {	
+            //早餐	
+            DropDownList ddl_2 = new DropDownList();	
+            ddl_2.ID = "ddl_2";	
+            ddl_2.EnableViewState = false;	
+            ddl_2.Items.Add(new ListItem("Y", "Y"));	
+            ddl_2.Items.Add(new ListItem("N", ""));	
+            e.Row.Cells[8].Controls.Add(ddl_2);	
+            //午餐	
+            DropDownList ddl_3 = new DropDownList();	
+            ddl_3.ID = "ddl_3";	
+            ddl_3.EnableViewState = false;	
+            ddl_3.Items.Add(new ListItem("Y", "Y"));	
+            ddl_3.Items.Add(new ListItem("N", ""));	
+            e.Row.Cells[9].Controls.Add(ddl_3);	
+            //晚餐	
+            DropDownList ddl_4 = new DropDownList();	
+            ddl_4.ID = "ddl_4";	
+            ddl_4.EnableViewState = false;	
+            ddl_4.Items.Add(new ListItem("Y", "Y"));	
+            ddl_4.Items.Add(new ListItem("N", ""));	
+            e.Row.Cells[10].Controls.Add(ddl_4);	
+            //素食	
+            DropDownList ddl_5 = new DropDownList();	
+            ddl_5.ID = "ddl_5";	
+            ddl_5.EnableViewState = false;	
+            ddl_5.Items.Add(new ListItem("Y", "Y"));	
+            ddl_5.Items.Add(new ListItem("N", ""));	
+            e.Row.Cells[11].Controls.Add(ddl_5);	
+        }	
+    }	
+    //取消確認	
+    protected void gv_meal_personal_RowDataBound(object sender, GridViewRowEventArgs e)	
+    {	
+        string[] arr_auth = DB_authority(Session["ac"].ToString(), "personal");	
+        DateTime dt_make_date;	
+        DateTime dt_now = DateTime.Now;	
+        if (e.Row.RowType == DataControlRowType.Header)	
+        {	
+            e.Row.Cells[2].Visible = false;	
+        }	
+        if (e.Row.RowType == DataControlRowType.DataRow)	
+        {	
+            Button btn_edit = (Button)e.Row.Cells[0].FindControl("btn_edit");	
+            Button btn_update_state = (Button)e.Row.Cells[1].FindControl("btn_update_state");	
+            btn_update_state.OnClientClick = "javascript:return confirm('確定取消?')";	
+            //狀態顯示(s)----------------------------------	
+            e.Row.Cells[2].Visible = false; //sys_id	
+            if (e.Row.Cells[12].Text == "取消")	
+            {	
+                e.Row.Attributes.Add("style", "color:#8E9EAB");	
+                btn_edit.Enabled = false; //編輯	
+                btn_update_state.Enabled = false;    //取消	
+            }	
+            if (gv_meal_personal.EditIndex == e.Row.RowIndex)	
+            {	
+                TextBox tb = e.Row.Cells[6].Controls[0] as TextBox;	
+                dt_make_date = Convert.ToDateTime(tb.Text);	
+            }	
+            else	
+            {	
+                dt_make_date = Convert.ToDateTime(e.Row.Cells[6].Text);	
+            }	
+            if (DateTime.Compare(dt_now,dt_make_date) > 0)	
+            {	
+                if (dt_limit(arr_auth)[0] == false)//訂餐時間限制	
+                {	
+                    btn_edit.Enabled = false;	
+                    btn_update_state.Enabled = false;	
+                }	
+            }	
+            //狀態顯示(e)----------------------------------	
+            //編輯狀態(s)-----------------------------------------------	
+            if (gv_meal_personal.EditIndex == e.Row.RowIndex)	
+            {	
+                //確認更新	
+                Button u_btn = (Button)e.Row.Cells[0].FindControl("btn_update");	
+                u_btn.OnClientClick = "javascript:return confirm('確定儲存?')";	
+                string str_tmp = null;	
+                int tmp = 0;	
+                DropDownList ddl_22 = (DropDownList)e.Row.FindControl("ddl_2");	
+                DropDownList ddl_33 = (DropDownList)e.Row.FindControl("ddl_3");	
+                DropDownList ddl_44 = (DropDownList)e.Row.FindControl("ddl_4");	
+                DropDownList ddl_55 = (DropDownList)e.Row.FindControl("ddl_5");	
+                for (int i = 3; i < e.Row.Cells.Count; i++) //第0格為編輯按鈕，第1格為取消按鈕	
+                {	
+                    TextBox tb = null;	
+                    tb = e.Row.Cells[i].Controls[0] as TextBox;	
+                    tmp = 0;	
+                    if (tb.Text == "" && tb != null)	
+                    {	
+                        tmp = 1;	
+                    }	
+                    if (i == 8) //早餐	
+                    {	
+                        ddl_22.SelectedIndex = tmp;	
+                        e.Row.Cells[i].Controls.Clear();	
+                        e.Row.Cells[i].Controls.Add(ddl_22);	
+                        str_tmp += "早餐：" + tmp + "，";	
+                    }	
+                    else if (i == 9) //午餐	
+                    {	
+                        ddl_33.SelectedIndex = tmp;	
+                        e.Row.Cells[i].Controls.Clear();	
+                        e.Row.Cells[i].Controls.Add(ddl_33);	
+                        str_tmp += "午餐：" + tmp + "，";	
+                    }	
+                    else if (i == 10) //晚餐	
+                    {	
+                        ddl_44.SelectedIndex = tmp;	
+                        e.Row.Cells[i].Controls.Clear();	
+                        e.Row.Cells[i].Controls.Add(ddl_44);	
+                        str_tmp += "晚餐：" + tmp + "，";	
+                    }	
+                    else if (i == 11) //素食	
+                    {	
+                        ddl_55.SelectedIndex = tmp;	
+                        e.Row.Cells[i].Controls.Clear();	
+                        e.Row.Cells[i].Controls.Add(ddl_55);	
+                        str_tmp += "素食：" + tmp + "，";	
+                    }	
+                    else if (i == 14) //備註	
+                    {	
+                        tb.Width = Unit.Pixel(150); //寬度設定	
+                    }	
+                    else	
+                    {	
+                        tb.Enabled = false;	
+                        tb.Width = Unit.Pixel(90); //寬度設定	
+                        if (i == 5)	
+                        {	
+                            str_tmp += "姓名：" + tb.Text + "，";	
+                        }	
+                        else if (i == 6)	
+                        {	
+                            str_tmp += "日期：" + tb.Text + "，";	
+                        }	
+                    }	
+                }	
+                if (DateTime.Compare(dt_now, dt_make_date) >= 0)	
+                {	
+                    if (dt_limit(arr_auth)[1] == false)//訂餐時間限制	
+                    {	
+                        ddl_22.Enabled = false;	
+                        ddl_33.Enabled = false;	
+                        ddl_55.Enabled = false;	
+                    }	
+                    else	
+                    {	
+                    }	
+                }	
+                record_meal_log("UPDATE。載入更新個人資料訂餐。" + str_tmp, "meal");	
+            }	
+            //編輯狀態(e)---------------------------------------------- -	
+        }	
+    }	
+    //編輯	
+    protected void gv_meal_personal_RowEditing(object sender, GridViewEditEventArgs e)	
+    {	
+        gv_meal_personal.EditIndex = e.NewEditIndex;	
+        DB_meal_personal();	
+    }	
+    //離開編輯	
+    protected void gv_meal_personal_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)	
+    {	
+        gv_meal_personal.EditIndex = -1;	
+        DB_meal_personal();	
+    }	
+    //更新資料表[PM_Opuser_Work]：抓早午晚餐及備住的欄位更新	
+    protected void gv_meal_personal_RowUpdating(object sender, GridViewUpdateEventArgs e)	
+    {	
+        string str_id = gv_meal_personal.Rows[e.RowIndex].Cells[2].Text;	
+        DropDownList my_ddl_breakfast, my_ddl_lunch, my_ddl_dinner, my_ddl_vegetarian;	
+        TextBox my_t_remarks, my_t_make_date, my_t_sys_id, my_t_make_us;	
+        my_ddl_breakfast = (DropDownList)gv_meal_personal.Rows[e.RowIndex].Cells[8].FindControl("ddl_2"); //早餐	
+        my_ddl_lunch = (DropDownList)gv_meal_personal.Rows[e.RowIndex].Cells[9].FindControl("ddl_3"); //午餐	
+        my_ddl_dinner = (DropDownList)gv_meal_personal.Rows[e.RowIndex].Cells[10].FindControl("ddl_4"); //晚餐	
+        my_ddl_vegetarian = (DropDownList)gv_meal_personal.Rows[e.RowIndex].Cells[10].FindControl("ddl_5"); //素食	
+        my_t_make_us = (TextBox)gv_meal_personal.Rows[e.RowIndex].Cells[5].Controls[0]; //姓名	
+        my_t_make_date = (TextBox)gv_meal_personal.Rows[e.RowIndex].Cells[6].Controls[0]; //日期	
+        my_t_remarks = (TextBox)gv_meal_personal.Rows[e.RowIndex].Cells[14].Controls[0]; //備註	
+        string[] str_s = Session["OK"].ToString().Split('-');	
+        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);	
+        Conn.Open();	
+        string sql_cmd = "update [dbo].[PM_Opuser_Work] set sys_date = getdate(), breakfast = @my_breakfast, lunch = @my_lunch, dinner = @my_dinner, vegetarian = @my_vegetarian,  " +	
+            " op_state = 2, modify_user = @my_modify_user, remarks = @my_remarks " +	
+            " where sys_id = @my_sys_id";	
+        SqlCommand cmd = new SqlCommand(sql_cmd, Conn);	
+        cmd.Parameters.Add("@my_breakfast", SqlDbType.VarChar, 1);	
+        cmd.Parameters["@my_breakfast"].Value = my_ddl_breakfast.SelectedValue; //早餐	
+        cmd.Parameters.Add("@my_lunch", SqlDbType.VarChar, 1);	
+        cmd.Parameters["@my_lunch"].Value = my_ddl_lunch.SelectedValue; //午餐	
+        cmd.Parameters.Add("@my_dinner", SqlDbType.VarChar, 1);	
+        cmd.Parameters["@my_dinner"].Value = my_ddl_dinner.SelectedValue; //晚餐	
+        cmd.Parameters.Add("@my_vegetarian", SqlDbType.VarChar, 1);	
+        cmd.Parameters["@my_vegetarian"].Value = my_ddl_vegetarian.SelectedValue; //素食	
+        cmd.Parameters.Add("@my_remarks", SqlDbType.VarChar, 50);	
+        cmd.Parameters["@my_remarks"].Value = my_t_remarks.Text; //備註	
+        cmd.Parameters.Add("@my_modify_user", SqlDbType.VarChar, 10);	
+        cmd.Parameters["@my_modify_user"].Value = str_s[1]; //修改人	
+        cmd.Parameters.Add("@my_sys_id", SqlDbType.Int);	
+        cmd.Parameters["@my_sys_id"].Value = str_id; //id	
+        cmd.ExecuteNonQuery();	
+        cmd.Cancel();	
+        if (Conn.State == ConnectionState.Open)	
+        {	
+            Conn.Close();	
+            Conn.Dispose();	
+        }	
+        record_meal_log("UPDATE。更新個人訂餐。姓名：" + my_t_make_us.Text + "，日期：" + my_t_make_date.Text + "，" +	
+            "早餐：" + my_ddl_breakfast.SelectedIndex + "，午餐：" + my_ddl_lunch.SelectedIndex + "，晚餐：" + my_ddl_dinner.SelectedIndex + "素食：" + my_ddl_vegetarian.SelectedIndex,	
+            "meal");	
+        gv_meal_personal.EditIndex = -1;	
+        DB_meal_personal();	
+    }	
+    //更新資料表[PM_Opuser_Work]：狀態改為取消	
+    protected void gv_meal_personal_RowCommand(object sender, GridViewCommandEventArgs e)	
+    {	
+        if (e.CommandName == "update_state")	
+        {	
+            Button btn = (Button)e.CommandSource;	
+            GridViewRow row = (GridViewRow)btn.NamingContainer;	
+            string[] str_s = Session["OK"].ToString().Split('-');	
+            SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);	
+            Conn.Open();	
+            string sql_cmd = "update [dbo].[PM_Opuser_Work] set sys_date = getdate(), op_state = 0, modify_user = @my_modify_user " +	
+                " where sys_id = @my_sys_id";	
+            SqlCommand cmd = new SqlCommand(sql_cmd, Conn);	
+            cmd.Parameters.Add("@my_modify_user", SqlDbType.VarChar, 10);	
+            cmd.Parameters["@my_modify_user"].Value = str_s[1]; //修改人	
+            cmd.Parameters.Add("@my_sys_id", SqlDbType.Int);	
+            cmd.Parameters["@my_sys_id"].Value = gv_meal_personal.Rows[row.DataItemIndex].Cells[2].Text;	
+            cmd.ExecuteNonQuery();	
+            cmd.Cancel();	
+            if (Conn.State == ConnectionState.Open)	
+            {	
+                Conn.Close();	
+                Conn.Dispose();	
+            }	
+            record_meal_log("UPDATE。取消訂餐。姓名：" + gv_meal_personal.Rows[row.DataItemIndex].Cells[5].Text + "，日期：" + gv_meal_personal.Rows[row.DataItemIndex].Cells[6].Text + "。", "meal");	
+            gv_meal_personal.EditIndex = -1;	
+            DB_meal_personal();	
+        }	
     }
 
-    //刪除
+    //刪除---暫無開放此功能
     protected void gv_meal_personal_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
         SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);
@@ -488,10 +715,11 @@ public partial class meal_edit : class_login
         SqlCommand cmd = null;
         SqlDataReader dr = null;
         string sql_str = null;
-        sql_str = " SELECT sys_id,convert(varchar(20),[sys_date],20) as 建立時間 ,[work_no] as 工號 ,[make_us] as 姓名 ,convert(varchar(20),[make_date],23) as 工作日期 ,[Scheduling] as 排班 , " +
-            " [breakfast] as 早餐 ,[lunch] as 午餐 ,[dinner] as 晚餐 ,[Vegetarian] as 素食,[modify_user] as 修改人, remarks as 備註 " +
-            " FROM [dbo].[PM_Opuser_Work] where DATEDIFF(DAY, make_date, GETDATE()- " + day_2 + " ) < 0 and work_no = @my_work_no" +
-            " ORDER BY make_date desc"; 
+        sql_str = " SELECT sys_id,convert(varchar(20),[sys_date],20) as 修改時間 ,[work_no] as 工號 ,[make_us] as 姓名 ,convert(varchar(20),[make_date],23) as 工作日期 ,[Scheduling] as 排班 , " +	
+            " [breakfast] as 早餐 ,[lunch] as 午餐 ,[dinner] as 晚餐 ,[Vegetarian] as 素食, " +	
+            " case when op_state = '1' and modify_user<> '' then '代訂'  when op_state = '1' and modify_user = '' then '訂餐' when op_state = '0' then '取消' when op_state = '2' then '修改' end as '狀態' ,[modify_user] as 修改人, remarks as 備註 " +	
+            " FROM [dbo].[PM_Opuser_Work] where DATEDIFF(DAY, make_date, GETDATE()- " + day_2 + " ) < 0 and work_no = @my_work_no" +	
+            " ORDER BY make_date desc";
 
         cmd = new SqlCommand(sql_str, Conn);
         cmd.Parameters.Add("@my_work_no", SqlDbType.VarChar, 6);
@@ -510,6 +738,11 @@ public partial class meal_edit : class_login
             gv_meal_personal.DataSource = dr;
             gv_meal_personal.DataBind();
         }
+	else	
+        {	
+            gv_meal_personal.DataSource = null;	
+            gv_meal_personal.DataBind();	
+        }
         if (dr != null)
         {
             cmd.Cancel();
@@ -524,71 +757,94 @@ public partial class meal_edit : class_login
 
     //訂餐時間限制
     //事件呼叫：Page_Load、btn_submit_Click
-    public Boolean dt_limit(string[] arr_auth)
+    public List<Boolean> dt_limit(string[] arr_auth)
     {
+	List<Boolean> list_result = new List<Boolean>();
         DateTime dt_now = DateTime.Now;
         DateTime dt_date = DateTime.Now.Date;
         DateTime dt_am_7 = dt_date.AddHours(7).AddMinutes(30);
         DateTime dt_pm_7 = dt_date.AddHours(19).AddMinutes(30);
         DateTime dt_am_9 = dt_date.AddHours(9).AddMinutes(15);
+	DateTime dt_am_10 = dt_date.AddHours(10).AddMinutes(30);
         DateTime dt_pm_9 = dt_date.AddHours(21).AddMinutes(15);
         DateTime dt_pm_1 = dt_date.AddHours(13).AddMinutes(00);
-        DateTime[] dt_arr = new DateTime[] { dt_am_7, dt_am_9, dt_pm_1, dt_pm_7, dt_pm_9 };
+        DateTime[] dt_arr = new DateTime[] { dt_am_7, dt_am_9, dt_am_10, dt_pm_1, dt_pm_7, dt_pm_9 };	
+        string str_empno = Session["id"].ToString();
         Boolean dt_result = true;
+	Boolean dt_result_gv = true;
         Boolean auth_result = false;
         if (arr_auth[0] == "99" || arr_auth[0] == "10" || arr_auth[0] == "12" || arr_auth[0] == "21" || arr_auth[0] == "22")
         {
             auth_result = true;
         }
-
-        if (DateTime.Compare(dt_arr[0], dt_now) > 0)
+	if (str_empno == "103157" || str_empno == "103168" || str_empno == "104099") //警衛人員	
+        {	
+            dt_result = true;	
+            dt_result_gv = true;	
+        }
+        if (DateTime.Compare(dt_arr[0], dt_now) > 0) //7:30
         {
             dt_result = false;
         }
         else
         {
-            if (DateTime.Compare(dt_arr[1], dt_now) > 0)
+            if (DateTime.Compare(dt_arr[1], dt_now) > 0) //9:15
             {
                 btn_submit.Enabled = true;
             }
             else
             {
-                if (DateTime.Compare(dt_arr[2], dt_now) > 0)
+                if (DateTime.Compare(dt_arr[2], dt_now) > 0) //10:30
                 {
-                    if (auth_result == true) //超過一點不能訂早午餐
-                    {
-                        btn_submit.Enabled = true;
-                        rbl_breakfast.Enabled = false;
-                        rbl_lunch.Enabled = false;
-                    }
-                    else
-                    {
-                        dt_result = false;
-                    }
+                    btn_submit.Enabled = true;	
+                    rbl_breakfast.Enabled = false;	
+                    rbl_lunch.Enabled = false;	
+                    dt_result = true;	
+                    dt_result_gv = false;
                 }
                 else
                 {
-                    if (DateTime.Compare(dt_arr[3], dt_now) > 0)
-                    {
-                        dt_result = false;
-                        
-                    }
-                    else
-                    {
-                        if (DateTime.Compare(dt_arr[4], dt_now) > 0)
-                        {
-                            btn_submit.Enabled = true;
-                        }
-                        else
-                        {
-                            dt_result = false;
-                        }
+                    if (DateTime.Compare(dt_arr[3], dt_now) > 0) //13:00	
+                    {	
+                        if (auth_result == true) //超過一點不能訂早午餐	
+                        {	
+                            btn_submit.Enabled = true;	
+                            rbl_breakfast.Enabled = false;	
+                            rbl_lunch.Enabled = false;	
+                            dt_result = true;	
+                        }	
+                        else	
+                        {	
+                            dt_result = false;	
+                        }	
+                        dt_result_gv = false;	
+                    }	
+                    else	
+                    {	
+                        if (DateTime.Compare(dt_arr[4], dt_now) > 0) //19:15	
+                        {	
+                            dt_result = false;	
+                            dt_result_gv = false;	
+                        }	
+                        else	
+                        {	
+                            if (DateTime.Compare(dt_arr[5], dt_now) > 0) //21:15	
+                            {	
+                                btn_submit.Enabled = true;	
+                            }	
+                            else	
+                            {	
+                                dt_result = false;	
+                                dt_result_gv = false;	
+                            }	
+                        }	
                     }
                 }
             }
         }
-
-        return dt_result;
+	list_result.Add(dt_result);	
+        list_result.Add(dt_result_gv);	
+        return list_result;
     }
     
 }

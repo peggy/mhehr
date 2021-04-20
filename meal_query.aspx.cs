@@ -13,7 +13,7 @@ public partial class meal_query : class_login
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        btn_cancel_update.OnClientClick = "javascript:return confirm('確定刪除取消?')"; //確認刪除取消
         if (Session["OK"] == null)
         {
             Response.Redirect("login.aspx");
@@ -76,6 +76,39 @@ public partial class meal_query : class_login
         }	
         	
         record_meal_log(str, "meal_query");
+    }
+
+    //刪除取消	
+    protected void btn_cancel_update_Click(object sender, EventArgs e)	
+    {	
+        if (tb_work_no.Text == "99" || tb_work_no.Text == "101" || tb_work_no.Text == "102" || tb_work_no.Text == "103")	
+        {	
+            Response.Write("<script language='javascript'>confirm('錯誤!\\n此工號無法刪除取消');</script>");	
+            record_meal_log("UPDATE。刪除取消：失敗。此工號無法刪除取消。日期：" + tb_make_date.Text + "工號：" + tb_work_no.Text, "meal_query");	
+            return;	
+        }	
+        else if (tb_work_no.Text.Length == 6)	
+        {	
+            string str = null;	
+            if (DB_cancel_update() == true)	
+            {	
+                str = "失敗";	
+                Response.Write("<script language='javascript'>confirm('錯誤! 查詢取消狀態，查無此人');</script>");	
+            }	
+            else	
+            {	
+                str = "成功";	
+                DBInit("query");	
+                Response.Write("<script language='javascript'>confirm('刪除取消成功!');</script>");	
+            }	
+            record_meal_log("UPDATE。刪除取消：" + str + "。日期：" + tb_make_date.Text + "工號：" + tb_work_no.Text, "meal_query");	
+        }	
+        else	
+        {	
+            Response.Write("<script language='javascript'>confirm('錯誤!\\n工號格式錯誤');</script>");	
+            record_meal_log("UPDATE。刪除取消：失敗。工號格式錯誤。日期：" + tb_make_date.Text + "工號：" + tb_work_no.Text, "meal_query");	
+            return;	
+        }	
     }
 
     protected void gv_meal_RowCreated(object sender, GridViewRowEventArgs e)
@@ -295,6 +328,7 @@ public partial class meal_query : class_login
         record_meal_log("UPDATE。更新訂餐。姓名：" + my_t_make_us.Text + "，日期：" + my_t_make_date.Text + "，" +
             "早餐：" + my_ddl_breakfast.SelectedIndex + "，午餐：" + my_ddl_lunch.SelectedIndex + "，晚餐：" + my_ddl_dinner.SelectedIndex,
             "meal_query");
+	Response.Write("<script language='javascript'>confirm('更新成功!');</script>");
         gv_meal.EditIndex = -1;
         if (tb_make_date.Text != "" || tb_work_no.Text != "" || ddl_class.SelectedValue != "%" || ddl_op_state.SelectedValue != "%" || ddl_scheduling.SelectedValue != "%")
         {
@@ -331,7 +365,8 @@ public partial class meal_query : class_login
                 Conn.Dispose();
             }
             record_meal_log("UPDATE。取消訂餐。姓名：" + gv_meal.Rows[row.DataItemIndex].Cells[5].Text + "，日期：" + gv_meal.Rows[row.DataItemIndex].Cells[6].Text + "。" , "meal_query");
-            gv_meal.EditIndex = -1;
+            Response.Write("<script language='javascript'>confirm('取消成功!');</script>");
+	    gv_meal.EditIndex = -1;
             if (tb_make_date.Text != "" || tb_work_no.Text != "" || ddl_class.SelectedValue != "%" || ddl_op_state.SelectedValue != "%" || ddl_scheduling.SelectedValue != "%")
             {
                 DBInit("query");
@@ -344,7 +379,7 @@ public partial class meal_query : class_login
     }
 
     //讀取資料表[v_mhe_dining_list]：綁定GridView
-    //事件呼叫：Page_Load、gv_meal_RowUpdating、btn_query_Click
+    //事件呼叫：Page_Load、btn_query_Click、gv_meal_RowEditing、gv_meal_RowCancelingEdit、gv_meal_RowUpdating
     public void DBInit(string type)
     {
         if (tb_make_date.Text == "") //限制每次查詢僅能查一天
@@ -363,7 +398,7 @@ public partial class meal_query : class_login
         string sql_str = null;
         sql_str = " SELECT sys_id,convert(varchar(20),sys_date,20) as 修改時間, work_no as 工號, make_us as 姓名, convert(varchar(20),make_date,23) as 工作日期, class as 班別, Scheduling as 排班, " +
                   " breakfast as 早餐, lunch as 午餐, dinner as 晚餐, Vegetarian as 素食, case when op_state = '1' and modify_user<> '' then '代訂' " +
-                  "when op_state = '1' and modify_user = '' then '訂餐' when op_state = '0' then '取消' when op_state = '2' then '修改' end as '狀態', replace([modify_user],' ','') as 修改人, remarks as 備註 " +
+                  " when op_state = '1' and modify_user = '' then '訂餐' when op_state = '0' then '取消' when op_state = '2' then '修改' end as '狀態', replace([modify_user],' ','') as 修改人, remarks as 備註 " +
                   " from v_mhe_dining_list " +
                   " where location like '%' + @my_dept + '%' " +
                   " and class like '%' + @my_class + '%'  and scheduling like '%' + @my_scheduling + '%' ";
@@ -541,6 +576,51 @@ public partial class meal_query : class_login
         {	
             cmd.Cancel();	
             dr.Close();	
+        }	
+        if (Conn.State == ConnectionState.Open)	
+        {	
+            Conn.Close();	
+            Conn.Dispose();	
+        }	
+        return result;	
+    }
+
+    //讀取資料表[PM_Opuser_Work]：讀取取消人員的工號，是則更新	
+    //事件呼叫：btn_cancel_update_Click	
+    public Boolean DB_cancel_update()	
+    {	
+        Boolean result = false;	
+        string[] str_s = Session["OK"].ToString().Split('-');	
+        SqlConnection Conn = new SqlConnection(WebConfigurationManager.ConnectionStrings["HRConnectionString"].ConnectionString);	
+        Conn.Open();	
+        SqlCommand cmd = null;	
+        string sql_str = null;	
+        sql_str = "SELECT count(work_no) FROM [dbo].[PM_Opuser_Work] where make_date = @my_make_date and work_no = @my_work_no and OP_State = 0";	
+        cmd = new SqlCommand(sql_str, Conn);	
+        cmd.Parameters.Add("@my_make_date", SqlDbType.DateTime);	
+        cmd.Parameters["@my_make_date"].Value = tb_make_date.Text;	
+        cmd.Parameters.Add("@my_work_no", SqlDbType.VarChar,6);	
+        cmd.Parameters["@my_work_no"].Value = tb_work_no.Text;	
+        int count = (int)cmd.ExecuteScalar();	
+        if (count > 0)	
+        {	
+            result = false;	
+            cmd.Cancel();	
+            sql_str = " update [dbo].[PM_Opuser_Work] set sys_date = getdate(), op_state = 1, modify_user = @my_modify_user " +	
+                      " where make_date = @my_make_date and work_no = @my_work_no ";	
+            cmd = new SqlCommand(sql_str, Conn);	
+            cmd.Parameters.Add("@my_modify_user", SqlDbType.VarChar, 10);	
+            cmd.Parameters["@my_modify_user"].Value = str_s[1];	
+            cmd.Parameters.Add("@my_make_date", SqlDbType.DateTime);	
+            cmd.Parameters["@my_make_date"].Value = tb_make_date.Text;	
+            cmd.Parameters.Add("@my_work_no", SqlDbType.VarChar, 6);	
+            cmd.Parameters["@my_work_no"].Value = tb_work_no.Text;	
+            cmd.ExecuteNonQuery();	
+            cmd.Cancel();	
+        }	
+        else	
+        {	
+            result = true;	
         }	
         if (Conn.State == ConnectionState.Open)	
         {	

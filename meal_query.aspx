@@ -111,7 +111,8 @@
         </div>
         <div class="row justify-content-center" style="padding-bottom: 50px">
             <div class="col-12 col-lg-12  text-center">
-                <asp:Button ID="btn_query" runat="server" Text="查詢" Class="btn btn-dark" OnClick="btn_query_Click" />
+                <asp:Button ID="btn_query" runat="server" Text="查詢" Class="btn btn-dark" OnClick="btn_query_Click" />&nbsp;&nbsp;&nbsp;	
+                <asp:Button ID="btn_cancel_update" runat="server" Text="刪除取消" Class="btn btn-primary" OnClick="btn_cancel_update_Click" />
             </div>
         </div>
 
@@ -127,7 +128,7 @@
                                 <asp:Button ID="btn_cancel" runat="server" class="btn btn-sm btn-outline-dark" CommandName="Cancel" Text="離開" />
                             </EditItemTemplate>
                             <ItemTemplate>
-                                <asp:Button ID="btn_edit" runat="server" class="btn btn-sm btn-outline-dark" CommandName="Edit" Text="編輯" />
+                                <asp:Button ID="btn_edit" runat="server" class="btn btn-sm btn-outline-dark" CommandName="Edit" Text="修改" />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField>

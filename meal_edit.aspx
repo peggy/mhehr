@@ -142,20 +142,30 @@
             <div class="col-lg-2 col-sm-12"></div>
         </div>
         <div class="row justify-content-center" style="padding-top: 10px; padding-bottom: 10px">
-            <div class="col-lg-2 col-sm-12"></div>
-            <div class="col-lg-8 col-sm-12 text-center">
-                <asp:GridView ID="gv_meal_personal" runat="server"  Class="table table-hover table-responsive-sm table-bordered" DataKeyNames="sys_id" OnRowDataBound="gv_meal_personal_RowDataBound" OnRowDeleting="gv_meal_personal_RowDeleting">
-                    <Columns>
-                        <asp:TemplateField>
-                            <ItemTemplate>
-                                <asp:Button ID="btn_delete" runat="server" CommandName="Delete" Text="刪除" Class="btn btn-sm btn-outline-secondary" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                    <HeaderStyle BackColor="#669999" ForeColor="White" />
+            <div class="col-lg-1 col-sm-12"></div>
+            <div class="col-lg-10 col-sm-12 text-center">
+                 <asp:GridView ID="gv_meal_personal" runat="server"  Class="table table-hover table-responsive-sm table-bordered" DataKeyNames="sys_id" OnRowDataBound="gv_meal_personal_RowDataBound" OnRowDeleting="gv_meal_personal_RowDeleting" OnRowCancelingEdit="gv_meal_personal_RowCancelingEdit" OnRowCreated="gv_meal_personal_RowCreated" OnRowEditing="gv_meal_personal_RowEditing" OnRowCommand="gv_meal_personal_RowCommand" OnRowUpdating="gv_meal_personal_RowUpdating">
+                   <Columns>	
+                        <asp:TemplateField>	
+                            <EditItemTemplate>	
+                                <asp:Button ID="btn_update" runat="server" class="btn btn-sm btn-outline-dark" CommandName="Update" Text="儲存" />	
+                                &nbsp;&nbsp;	
+                                <asp:Button ID="btn_cancel" runat="server" class="btn btn-sm btn-outline-dark" CommandName="Cancel" Text="離開" />	
+                            </EditItemTemplate>	
+                            <ItemTemplate>	
+                                <asp:Button ID="btn_edit" runat="server" class="btn btn-sm btn-outline-primary" CommandName="Edit" Text="修改" />	
+                            </ItemTemplate>	
+                        </asp:TemplateField>	
+                        <asp:TemplateField>	
+                            <ItemTemplate>	
+                                <asp:Button ID="btn_update_state" runat="server" CommandName="update_state" Text="取消" Class="btn btn-sm btn-outline-danger" />	
+                            </ItemTemplate>	
+                        </asp:TemplateField>	
+                    </Columns>	
+                    <HeaderStyle BackColor="#669999" ForeColor="White" />	
                 </asp:GridView>
             </div>
-            <div class="col-lg-2 col-sm-12"></div>
+            <div class="col-lg-1 col-sm-12"></div>
         </div>
     </div>
 </asp:Content>
